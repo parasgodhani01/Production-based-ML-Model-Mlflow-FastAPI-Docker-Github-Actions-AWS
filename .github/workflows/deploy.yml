@@ -41,6 +41,18 @@ jobs:
         run: |
           pytest tests/ -v || echo "No tests found — skipping"
 
+      - name: Download models from S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-2
+        run: |
+          mkdir -p models
+          aws s3 cp s3://fraud-detection-models-paras/best_model.pkl models/best_model.pkl
+          aws s3 cp s3://fraud-detection-models-paras/random_forest.pkl models/random_forest.pkl
+          aws s3 cp s3://fraud-detection-models-paras/xgboost.pkl models/xgboost.pkl
+          echo "Models downloaded successfully ✅"
+
       - name: Build Docker image
         run: |
           docker build -t fraud-detection:latest .
@@ -77,6 +89,14 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Download models from S3
+        run: |
+          mkdir -p models
+          aws s3 cp s3://fraud-detection-models-paras/best_model.pkl models/best_model.pkl
+          aws s3 cp s3://fraud-detection-models-paras/random_forest.pkl models/random_forest.pkl
+          aws s3 cp s3://fraud-detection-models-paras/xgboost.pkl models/xgboost.pkl
+          echo "Models downloaded successfully ✅"
 
       - name: Build, tag and push image to ECR
         id: build-image
