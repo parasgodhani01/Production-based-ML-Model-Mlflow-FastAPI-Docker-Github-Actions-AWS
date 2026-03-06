@@ -1,29 +1,8 @@
-# 🛡️ End-to-End ML System with Deployment
+#  End-to-End ML System with Deployment
 ### Production-Based Fraud Detection System
 
 A production-ready, end-to-end machine learning system for detecting financial fraud — from raw data to a live REST API deployed on AWS.
 
-![Python](https://img.shields.io/badge/Python-3.11-blue?style=flat-square&logo=python)
-![XGBoost](https://img.shields.io/badge/XGBoost-GPU-orange?style=flat-square)
-![FastAPI](https://img.shields.io/badge/FastAPI-green?style=flat-square&logo=fastapi)
-![Docker](https://img.shields.io/badge/Docker-blue?style=flat-square&logo=docker)
-![MLflow](https://img.shields.io/badge/MLflow-3.10-red?style=flat-square)
-![AWS](https://img.shields.io/badge/AWS-ECS%20%7C%20ECR-orange?style=flat-square&logo=amazonaws)
-![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-black?style=flat-square&logo=githubactions)
-
----
-
-## 📊 Results
-
-| Metric | Score |
-|--------|-------|
-| ROC-AUC | **1.0000** |
-| PR-AUC | **0.9999** |
-| CV PR-AUC | **0.9971** |
-| Dataset Size | **6.3M transactions** |
-| Fraud Rate | **0.13%** (extreme class imbalance) |
-
----
 
 ## 🏗️ Architecture
 
@@ -80,20 +59,6 @@ AWS ECS (Production)
 └── requirements.txt                    # Full dependencies
 ```
 
----
-
-## 🔍 Exploratory Data Analysis
-
-Key findings from 7 visualizations:
-
-- **Only 2 transaction types contain fraud** — TRANSFER (76.8%) and CASH_OUT (0.18%)
-- **Fraud = larger amounts** — median fraud ~$300K vs ~$10K for legitimate
-- **Extreme class imbalance** — 8,213 fraud vs 6,354,407 legitimate (0.13%)
-- **Balance mismatch is strongest signal** — fraudsters leave inconsistent balances
-- **Existing system failure** — isFlaggedFraud caught only 16 of 8,213 frauds (0.19%)
-
----
-
 ## ⚙️ Feature Engineering (27 New Features)
 
 | Block | Features |
@@ -106,145 +71,7 @@ Key findings from 7 visualizations:
 | Account Velocity | `origAcctFrequency`, `destAcctFrequency`, `isMuleDestCandidate` |
 | Time Features | `hour_of_day`, `day_of_month`, `isNightTime` |
 
----
-
-## 🤖 Models
-
-### XGBoost (GPU Accelerated) 🏆
-- Hardware: NVIDIA RTX 4060 Laptop + CUDA 12.9
-- Tuning: RandomizedSearchCV (10 iterations, 3-fold CV)
-- Class imbalance: `scale_pos_weight = 773.8`
-- Training time: ~2 minutes (vs ~20 min on CPU)
-
-### Random Forest
-- Tuning: RandomizedSearchCV (10 iterations, 3-fold CV)
-- Class imbalance: `class_weight = balanced_subsample`
-- All CPU cores: `n_jobs = -1`
-
----
-
-## 🚀 API Usage
-
-### Run Locally
-
-```bash
-# Install dependencies
-pip install -r requirements-docker.txt
-
-# Start server
-uvicorn app.main:app --reload --port 8000
-```
-
-### Predict Fraud
-
-```bash
-POST http://localhost:8000/predict
-```
-
-```json
-{
-  "step": 1,
-  "amount": 500000,
-  "oldbalanceOrg": 500000,
-  "newbalanceOrig": 0,
-  "oldbalanceDest": 0,
-  "newbalanceDest": 500000,
-  "type": "TRANSFER"
-}
-```
-
-**Response:**
-
-```json
-{
-  "fraud_probability": 0.9533,
-  "is_fraud": true,
-  "risk_level": "HIGH",
-  "threshold_used": 0.5
-}
-```
-
-> 📖 Open **http://localhost:8000/docs** for interactive Swagger UI
-
----
-
-## 🐳 Docker
-
-```bash
-# Build
-docker build -t fraud-detection:latest .
-
-# Run
-docker run -p 8000:8000 fraud-detection:latest
-```
-
----
-
-## 📈 MLflow Experiment Tracking
-
-```bash
-venv\Scripts\python.exe -m mlflow ui
-```
-
-Open **http://localhost:5000** to compare all model runs side by side.
-
----
-
-## 🔄 CI/CD Pipeline
-
-Every push to `main` automatically triggers:
-
-```
-Job 1 — Build & Test
-  → Install dependencies
-  → Build Docker image
-  → Container health check
-
-Job 2 — Deploy to AWS
-  → Push image to ECR
-  → Update ECS task definition
-  → Deploy to ECS Fargate
-```
-
----
-
-## ☁️ AWS Infrastructure
-
-| Service | Purpose |
-|---------|---------|
-| ECR | Docker image registry |
-| ECS Fargate | Serverless container hosting |
-| IAM | GitHub Actions deploy permissions |
-
----
-
-## 🛠️ Tech Stack
-
-| Category | Tools |
-|----------|-------|
-| Language | Python 3.11 |
-| Data Processing | Pandas, NumPy, PyArrow |
-| Machine Learning | Scikit-learn, XGBoost 3.2.0 |
-| GPU | NVIDIA RTX 4060, CUDA 12.9 |
-| Experiment Tracking | MLflow 3.10.0 |
-| API | FastAPI, Uvicorn |
-| Container | Docker 28.3.2 |
-| CI/CD | GitHub Actions |
-| Cloud | AWS ECR + ECS Fargate |
-
----
-
-## 📦 Installation
-
-```bash
-git clone https://github.com/parasgodhani01/Fraud-Detection-Machine-Learning-Model.git
-cd Fraud-Detection-Machine-Learning-Model
-
-python -m venv venv
-venv\Scripts\activate
-
-pip install -r requirements.txt
-```
+--- 
 
 ---
 
@@ -257,12 +84,6 @@ pip install -r requirements.txt
 4. Put preview.png inside images/
 5. Push to GitHub — the image will appear here automatically -->
 
-![Web App Preview](images/preview.png)
+![Web App Preview](web_preview.png)
 
 ---
-
-## 👤 Author
-
-**Paras Godhani**
-
-[![GitHub](https://img.shields.io/badge/GitHub-parasgodhani01-black?style=flat-square&logo=github)](https://github.com/parasgodhani01)
